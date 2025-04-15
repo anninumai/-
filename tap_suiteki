@@ -1,0 +1,45 @@
+let drops = [];
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+}
+
+function draw() {
+  background(240);
+  for (let i = drops.length - 1; i >= 0; i--) {
+    drops[i].update();
+    drops[i].display();
+    if (drops[i].isOffscreen()) {
+      drops.splice(i, 1);
+    }
+  }
+}
+
+function mousePressed() {
+  for (let i = 0; i < 10; i++) {
+    drops.push(new Drop(mouseX, mouseY));
+  }
+}
+
+class Drop {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.random2D().mult(random(2, 6));
+    this.radius = random(5, 10);
+  }
+
+  update() {
+    this.pos.add(this.vel);
+    this.vel.y += 0.1; // 重力
+  }
+
+  display() {
+    noStroke();
+    fill(100, 150, 255, 200);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2);
+  }
+
+  isOffscreen() {
+    return this.pos.y > height;
+  }
+}
